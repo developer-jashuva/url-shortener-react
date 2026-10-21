@@ -123,3 +123,62 @@ button.danger:hover { background: #fbe9e7; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 75vh;
+  padding: 24px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  padding: 28px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: white;
+}
+
+.auth-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.auth-form button[type="submit"] {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.auth-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.text-button {
+  border: none;
+  background: none;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.error-message {
+  color: #dc2626;
+}
+
+.success-message {
+  color: #15803d;
+}
