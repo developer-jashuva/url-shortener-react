@@ -2,11 +2,17 @@ import { useCallback, useEffect, useState } from "react";
 import ShortenForm from "./components/ShortenForm.jsx";
 import LinkList from "./components/LinkList.jsx";
 import { fetchLinks, shortenUrl, deleteLink } from "./api.js";
+import Login from "./components/Login";
+import Register from "./components/Register";
+
 
 export default function App() {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [authPage, setAuthPage] = useState("login");
+  const [currentUser, setCurrentUser] = useState(null);
+
 
   const loadLinks = useCallback(async () => {
     setLoading(true);
@@ -39,6 +45,29 @@ export default function App() {
     }
   }
 
+  function handleLogin(data) {
+  localStorage.setItem("token", data.token);
+  setCurrentUser(data.user);
+}
+
+if (!currentUser) {
+  if (authPage === "register") {
+    return (
+      <Register
+        onSwitchToLogin={() => setAuthPage("login")}
+      />
+    );
+  }
+
+  return (
+    <Login
+      onLogin={handleLogin}
+      onSwitchToRegister={() => setAuthPage("register")}
+    />
+  );
+}
+
+
   return (
     <main className="page">
       <header className="hero">
@@ -49,6 +78,8 @@ export default function App() {
         </p>
       </header>
 
+      
+
       <ShortenForm onShorten={handleShorten} />
       <LinkList
         links={links}
@@ -57,6 +88,17 @@ export default function App() {
         onDelete={handleDelete}
         onRefresh={loadLinks}
       />
+
+      <button
+  onClick={() => {
+    localStorage.removeItem("token");
+    setCurrentUser(null);
+    setAuthPage("login");
+  }}
+>
+  Logout
+</button>
+
     </main>
   );
 }
