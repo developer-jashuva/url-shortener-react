@@ -2,10 +2,23 @@ const API = (import.meta.env.VITE_API_URL || "http://localhost:5158").replace(/\
 
 async function request(path, options = {}) {
   let res;
+
+  const token = localStorage.getItem("token");
+
+  const headers = {
+    ...(options.body ? { "Content-Type": "application/json" } : {}),
+    ...options.headers,
+  };
+
+  // Attach JWT when available
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   try {
     res = await fetch(`${API}${path}`, {
-      headers: { "Content-Type": "application/json" },
       ...options,
+      headers,
     });
   } catch {
     throw new Error("Can't reach the server. Check that the API is running.");
@@ -13,17 +26,21 @@ async function request(path, options = {}) {
 
   if (!res.ok) {
     let message = `Request failed (${res.status})`;
+
     try {
       const body = await res.json();
       message = body.message || body.error || body.title || message;
     } catch {
-      /* response had no JSON body */
+      // Response had no JSON body
     }
+
     throw new Error(message);
   }
 
   if (res.status === 204) return null;
+
   const text = await res.text();
+
   try {
     return JSON.parse(text);
   } catch {
@@ -71,3 +88,5 @@ export async function fetchLinks() {
 export function deleteLink(code) {
   return request(`/api/url/${encodeURIComponent(code)}`, { method: "DELETE" });
 }
+
+
