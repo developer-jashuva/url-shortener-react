@@ -11,8 +11,32 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [authPage, setAuthPage] = useState("login");
-  const [currentUser, setCurrentUser] = useState(null);
+  
+  const [currentUser, setCurrentUser] = useState(() => {
+  const token = localStorage.getItem("token");
 
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+
+    if (payload.exp * 1000 <= Date.now()) {
+      localStorage.removeItem("token");
+      return null;
+    }
+
+    return {
+      id: payload.nameid || payload.sub,
+      username: payload.unique_name,
+      email: payload.email,
+    };
+  } catch {
+    localStorage.removeItem("token");
+    return null;
+  }
+});
 
   const loadLinks = useCallback(async () => {
     setLoading(true);
