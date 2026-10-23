@@ -182,3 +182,38 @@ button.danger:hover { background: #fbe9e7; }
 .success-message {
   color: #15803d;
 }
+
+.analytics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.analytics-card {
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.analytics-card h3 {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.analytics-card p {
+  margin: 0;
+  color: #0f172a;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .analytics {
+    grid-template-columns: 1fr;
+  }
+}

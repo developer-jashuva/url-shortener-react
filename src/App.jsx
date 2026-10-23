@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import ShortenForm from "./components/ShortenForm.jsx";
 import LinkList from "./components/LinkList.jsx";
-import { fetchLinks, shortenUrl, deleteLink } from "./api.js";
+import { fetchLinks, shortenUrl, deleteLink, fetchAnalytics } from "./api.js";
 import Login from "./components/Login";
 import Register from "./components/Register";
 
@@ -38,6 +38,13 @@ export default function App() {
   }
 });
 
+
+const [analytics, setAnalytics] = useState({
+  totalUrls: 0,
+  totalClicks: 0,
+  activeUrls: 0,
+});
+
   const loadLinks = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -49,6 +56,18 @@ export default function App() {
       setLoading(false);
     }
   }, []);
+
+  const loadAnalytics = useCallback(async () => {
+  try {
+    const data = await fetchAnalytics();
+    setAnalytics(data);
+  } catch (err) {
+    setError(err.message);
+  }
+}, []);
+
+
+
 
   useEffect(() => {
     loadLinks();
@@ -67,10 +86,15 @@ export default function App() {
   };
 }, []);
 
+useEffect(() => {
+  loadAnalytics();
+}, [loadAnalytics]);
+
 
   async function handleShorten(url) {
     const created = await shortenUrl(url);
     await loadLinks(); // the list shows the stored record, including click counts
+    await Promise.all([loadLinks(), loadAnalytics()]);
     return created;
   }
 
@@ -78,6 +102,7 @@ export default function App() {
     try {
       await deleteLink(code);
       setLinks((current) => current.filter((l) => l.code !== code));
+      await loadAnalytics();
     } catch (err) {
       setError(err.message);
     }
@@ -116,7 +141,22 @@ if (!currentUser) {
         </p>
       </header>
 
-      
+      <section className="analytics">
+  <div className="analytics-card">
+    <h3>Total URLs</h3>
+    <p>{analytics.totalUrls}</p>
+  </div>
+
+  <div className="analytics-card">
+    <h3>Total Clicks</h3>
+    <p>{analytics.totalClicks}</p>
+  </div>
+
+  <div className="analytics-card">
+    <h3>Active URLs</h3>
+    <p>{analytics.activeUrls}</p>
+  </div>
+</section>
 
       <ShortenForm onShorten={handleShorten} />
       <LinkList
