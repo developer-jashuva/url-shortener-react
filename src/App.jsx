@@ -11,7 +11,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [authPage, setAuthPage] = useState("login");
-  
+
   const [currentUser, setCurrentUser] = useState(() => {
   const token = localStorage.getItem("token");
 
@@ -53,6 +53,20 @@ export default function App() {
   useEffect(() => {
     loadLinks();
   }, [loadLinks]);
+
+  useEffect(() => {
+  function handleAuthLogout() {
+    setCurrentUser(null);
+    setAuthPage("login");
+  }
+
+  window.addEventListener("auth:logout", handleAuthLogout);
+
+  return () => {
+    window.removeEventListener("auth:logout", handleAuthLogout);
+  };
+}, []);
+
 
   async function handleShorten(url) {
     const created = await shortenUrl(url);

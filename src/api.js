@@ -25,6 +25,13 @@ async function request(path, options = {}) {
   }
 
   if (!res.ok) {
+
+    if (res.status === 401) {
+    localStorage.removeItem("token");
+    window.dispatchEvent(new Event("auth:logout"));
+    throw new Error("Your session has expired. Please log in again.");
+  }
+
     let message = `Request failed (${res.status})`;
 
     try {
@@ -36,6 +43,8 @@ async function request(path, options = {}) {
 
     throw new Error(message);
   }
+
+
 
   if (res.status === 204) return null;
 
@@ -89,4 +98,6 @@ export function deleteLink(code) {
   return request(`/api/url/${encodeURIComponent(code)}`, { method: "DELETE" });
 }
 
-
+export async function fetchAnalytics() {
+  return request("/api/url/analytics");
+}
