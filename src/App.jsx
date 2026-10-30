@@ -4,7 +4,7 @@ import LinkList from "./components/LinkList.jsx";
 import { fetchLinks, shortenUrl, deleteLink, fetchAnalytics } from "./api.js";
 import Login from "./components/Login";
 import Register from "./components/Register";
-
+import ClickChart from "./components/ClickChart.jsx";
 
 export default function App() {
   const [links, setLinks] = useState([]);
@@ -159,6 +159,7 @@ if (!currentUser) {
 </section>
 
       <ShortenForm onShorten={handleShorten} />
+      <ClickChart links={links} />
       <LinkList
         links={links}
         loading={loading}
