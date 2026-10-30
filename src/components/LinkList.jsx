@@ -38,6 +38,7 @@ export default function LinkList({ links, loading, error, onDelete, onRefresh })
               type="button"
               className="danger"
               onClick={() => {
+                 
                 if (window.confirm("Delete this link? The short URL will stop working.")) {
                   onDelete(link.code);
                 }

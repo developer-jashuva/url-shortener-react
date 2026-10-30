@@ -61,7 +61,7 @@ async function request(path, options = {}) {
 // If your Swagger shows different names, change them here only.
 export function normalize(item) {
   if (typeof item === "string") {
-    const code = item.split("/").filter(Boolean).pop();
+    const code =item.split("/").filter(Boolean).pop();
     return {
       code,
       originalUrl: "",
@@ -70,7 +70,17 @@ export function normalize(item) {
       createdAt: null,
     };
   }
-  const code = item.shortCode ?? item.code;
+
+    const code = item.shortUrl.split("/").filter(Boolean).pop();
+
+  const result={code,
+    originalUrl: item.originalUrl ?? item.longUrl ?? "",
+    shortUrl: item.shortUrl ?? `${API}/${code}`,
+    clicks: item.clickCount ?? item.clicks ?? 0,
+    createdAt: item.createdAt ?? item.createdOn ?? null,}
+
+
+
   return {
     code,
     originalUrl: item.originalUrl ?? item.longUrl ?? "",
