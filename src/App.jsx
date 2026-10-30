@@ -151,11 +151,6 @@ if (!currentUser) {
     <h3>Total Clicks</h3>
     <p>{analytics.totalClicks}</p>
   </div>
-
-  <div className="analytics-card">
-    <h3>Active URLs</h3>
-    <p>{analytics.activeUrls}</p>
-  </div>
 </section>
 
       <ShortenForm onShorten={handleShorten} />

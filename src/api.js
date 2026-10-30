@@ -44,8 +44,6 @@ async function request(path, options = {}) {
     throw new Error(message);
   }
 
-
-
   if (res.status === 204) return null;
 
   const text = await res.text();
